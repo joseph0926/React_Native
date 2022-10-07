@@ -7,12 +7,14 @@ import GoalInput from "./components/GoalInput";
 export default function App() {
   const [enteredGoalText, setEnteredGoalText] = useState("");
   const [goals, setGoals] = useState([]);
+  const [modalIsShow, setModalIsShow] = useState(false);
 
   const goalInputHandler = (enteredText) => {
     setEnteredGoalText(enteredText);
   };
   const addGoalHandler = () => {
     setGoals((currentGoals) => [...currentGoals, {text: enteredGoalText, id: Math.random().toString()}]);
+    endAddGoalHandler();
   };
 
   const deleteGoalHandler = (id) => {
@@ -23,9 +25,17 @@ export default function App() {
     })
   }
 
+  const startAddGoalHandler = () => {
+    setModalIsShow(true);
+  }
+  const endAddGoalHandler = () => {
+    setModalIsShow(false);
+  }
+
   return (
     <View style={styles.appContainer}>
-      <GoalInput goalInputHandler={goalInputHandler} addGoalHandler={addGoalHandler}></GoalInput>
+      <Button title="목표를 추가하세요" color="#5e0acc" onPress={startAddGoalHandler} />
+      <GoalInput visible={modalIsShow} onCancle={endAddGoalHandler} goalInputHandler={goalInputHandler} addGoalHandler={addGoalHandler}></GoalInput>
       <View style={styles.goalsContainer}>
         <FlatList data={goals} renderItem={itemData => {
           return (
