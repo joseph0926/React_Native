@@ -2,7 +2,9 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
 const PrimaryButton = (props) => {
-  const pressHandler = () => {};
+  const pressHandler = () => {
+    props.onPress();
+  };
 
   return (
     <View style={styles.btn_outer_container}>
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
     margin: 4,
     overflow: "hidden",
     backgroundColor: "#72063c",
-    width: 150,
+    width: 130,
     height: 40,
   },
   btn_inner_container: {

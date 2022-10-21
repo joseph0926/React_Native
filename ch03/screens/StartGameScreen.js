@@ -1,36 +1,59 @@
-import React from "react";
-import { TextInput, View, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { TextInput, View, StyleSheet, Alert, Text } from "react-native";
+import Card from "../components/Card";
 
 import PrimaryButton from "../components/PrimaryButton";
 
-const StartGameScreen = () => {
+const StartGameScreen = (props) => {
+  const [inputValue, setInputValue] = useState("");
+  const inputHandler = (entered) => {
+    setInputValue(entered);
+  };
+
+  const resetValue = () => {
+    setInputValue("");
+  };
+
+  const confirmHandler = () => {
+    const inputNum = parseInt(inputValue);
+
+    if (isNaN(inputNum) || inputNum <= 0 || inputNum > 99) {
+      Alert.alert("유효하지 않은 값", "1이상 99이하의 숫자를 입력해주세요!", [{ text: "Ok", style: "destructive", onPress: resetValue }]);
+      return;
+    }
+
+    props.onValue(inputNum);
+    props.onSwitch();
+  };
+
   return (
-    <View style={styles.start_container}>
-      <TextInput style={styles.textInput} maxLength={2} keyboardType="number-pad" autoCapitalize="none" autoCorrect={false} />
-      <View style={styles.btnContainer}>
-        <PrimaryButton>Reset</PrimaryButton>
-        <PrimaryButton>Confirm</PrimaryButton>
-      </View>
+    <View style={styles.rootContainer}>
+      <Text style={styles.title}>나의 숫자를 맞춰봐</Text>
+      <Card>
+        <Text style={styles.desc}>숫자를 입력하세요!</Text>
+        <TextInput
+          style={styles.textInput}
+          maxLength={2}
+          keyboardType="number-pad"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={inputValue}
+          onChangeText={inputHandler}
+        />
+        <View style={styles.btnContainer}>
+          <PrimaryButton onPress={resetValue}>Reset</PrimaryButton>
+          <PrimaryButton onPress={confirmHandler}>Confirm</PrimaryButton>
+        </View>
+      </Card>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  start_container: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#4e0329",
-    paddingHorizontal: 12,
+  rootContainer: {
+    flex: 1,
     marginTop: 100,
-    marginHorizontal: 24,
-    paddingBottom: 16,
-    borderRadius: 10,
-    elevation: 10,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 1,
+    alignItems: "center",
   },
   textInput: {
     height: 50,
@@ -47,6 +70,20 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     marginTop: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+    borderWidth: 2,
+    borderColor: "#fff",
+    padding: 12,
+  },
+  desc: {
+    color: "#ddb52f",
+    fontSize: 24,
+    paddingTop: 20,
   },
 });
 
