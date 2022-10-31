@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import Card from "../components/Card";
@@ -22,12 +22,18 @@ let maxValue = 100;
 const GameScreen = (props) => {
   const initValue = randomNum(1, 100, props.inputValue);
   const [currentValue, setCurrenValue] = useState(initValue);
+  const [guessRounds, setGuessRounds] = useState([initValue]);
 
   useEffect(() => {
     if (currentValue === props.inputValue) {
-      props.onSwitch();
+      props.onSwitch(guessRounds.length);
     }
   }, [currentValue]);
+
+  useEffect(() => {
+    minValue = 1;
+    maxValue = 100;
+  }, []);
 
   const nextValueHandler = (direction) => {
     if ((direction === "lower" && currentValue < props.inputValue) || (direction === "higher" && currentValue > props.inputValue)) {
@@ -42,6 +48,7 @@ const GameScreen = (props) => {
     }
     const newNum = randomNum(minValue, maxValue, currentValue);
     setCurrenValue(newNum);
+    setGuessRounds((prevGuessRounds) => [...prevGuessRounds, newNum]);
   };
 
   return (
@@ -59,6 +66,20 @@ const GameScreen = (props) => {
           </PrimaryButton>
         </View>
       </Card>
+      <View>
+        {/* {guessRounds.map((g) => {
+          return <Text key={g}>{g}</Text>;
+        })} */}
+        <FlatList
+          data={guessRounds}
+          renderItem={(itemData) => {
+            return <Text>{itemData.item}</Text>;
+          }}
+          keyExtractor={(item) => {
+            item;
+          }}
+        ></FlatList>
+      </View>
     </View>
   );
 };

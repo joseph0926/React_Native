@@ -11,7 +11,8 @@ import GameOverScreen from "./screens/GameOverScreen";
 export default function App() {
   const [showGameScreen, setShowGameScreen] = useState(false);
   const [gameIsOver, setGameIsOver] = useState(false);
-  const [inputValue, setInputValue] = useState();
+  const [inputValue, setInputValue] = useState(null);
+  const [guessRounds, setGuessRounds] = useState(0);
 
   const [fontsLoad] = useFonts({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
@@ -25,13 +26,19 @@ export default function App() {
   const switchScreenHandler = () => {
     setShowGameScreen(true);
   };
-  const gameOverHandler = () => {
+  const gameOverHandler = (numberOfRounds) => {
     setShowGameScreen(false);
     setGameIsOver(true);
+    setGuessRounds(numberOfRounds);
   };
 
   const inputValueHandler = (input) => {
     setInputValue(input);
+  };
+
+  const startNewGame = () => {
+    setInputValue(null);
+    setGuessRounds(0);
   };
 
   let screen = <StartGameScreen onSwitch={switchScreenHandler} onValue={inputValueHandler}></StartGameScreen>;
@@ -40,8 +47,8 @@ export default function App() {
     screen = <GameScreen onSwitch={gameOverHandler} inputValue={inputValue}></GameScreen>;
   }
 
-  if (gameIsOver) {
-    screen = <GameOverScreen></GameOverScreen>;
+  if (gameIsOver && inputValue) {
+    screen = <GameOverScreen userNumber={inputValue} roundsNumber={guessRounds} onStartNewGame={startNewGame}></GameOverScreen>;
   }
 
   return (
